@@ -1,0 +1,74 @@
+#include <NimBLEDevice.h>
+#include <FastLED.h>
+
+// ---------- LED ----------
+#define LED_PIN 5
+#define NUM_LEDS 61
+
+CRGB leds[NUM_LEDS];
+int currentLed = -1;
+
+// ---------- BLE UUIDs ----------
+#define SERVICE_UUID        "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
+#define CHARACTERISTIC_UUID "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
+
+class MidiCallbacks : public NimBLECharacteristicCallbacks {
+
+    void onWrite(NimBLECharacteristic* characteristic,
+                 NimBLEConnInfo& connInfo) override {
+
+        std::string value = characteristic->getValue();
+
+        if (value.length() != 1)
+            return;
+
+        uint8_t midi = (uint8_t)value[0];
+
+        int ledIndex = midi - 36;
+
+        if (ledIndex < 0 || ledIndex >= NUM_LEDS)
+            return;
+
+        if (currentLed >= 0)
+            leds[currentLed] = CRGB::Black;
+
+        currentLed = ledIndex;
+
+        leds[currentLed] = CRGB::Blue;
+
+        FastLED.show();
+    }
+};
+
+void setup() {
+
+    FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
+    FastLED.clear();
+    FastLED.show();
+
+    NimBLEDevice::init("PianoBuddy");
+
+    NimBLEServer* server = NimBLEDevice::createServer();
+
+    NimBLEService* service =
+        server->createService(SERVICE_UUID);
+
+    NimBLECharacteristic* characteristic =
+        service->createCharacteristic(
+            CHARACTERISTIC_UUID,
+            NIMBLE_PROPERTY::WRITE
+        );
+
+    characteristic->setCallbacks(new MidiCallbacks());
+
+    service->start();
+
+    NimBLEAdvertising* advertising =
+        NimBLEDevice::getAdvertising();
+
+    advertising->addServiceUUID(SERVICE_UUID);
+    advertising->start();
+}
+
+void loop() {
+}
