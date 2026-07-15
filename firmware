@@ -7,36 +7,181 @@
 
 CRGB leds[NUM_LEDS];
 int currentLed = -1;
+int nextPreviewLed = -1;
 
-// ---------- BLE UUIDs ----------
+// ---------- BLE UUIDs (UNCHANGED) ----------
 #define SERVICE_UUID        "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
 #define CHARACTERISTIC_UUID "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
 
+// ============================================================
+// Note -> Color mapping (deterministic, based on midi % 12)
+// Pure red is reserved for future error indication.
+// ============================================================
+CRGB getNoteColor(uint8_t midi) {
+    switch (midi % 12) {
+        case 0:  return CRGB::Blue;     // C
+        case 1:  return CRGB::Cyan;     // C#
+        case 2:  return CRGB::Green;    // D
+        case 3:  return CRGB::Lime;     // D#
+        case 4:  return CRGB::Yellow;   // E
+        case 5:  return CRGB::Orange;   // F
+        case 6:  return CRGB::Purple;   // F#
+        case 7:  return CRGB::Pink;     // G
+        case 8:  return CRGB::Aqua;     // G#
+        case 9:  return CRGB::White;    // A
+        case 10: return CRGB::SkyBlue;  // A#
+        case 11: return CRGB::Violet;   // B
+        default: return CRGB::Blue;
+    }
+}
+
+// ============================================================
+// Startup connection animation (non-blocking waterfall)
+// ============================================================
+bool animationPlaying = false;
+int animationStep = 0;
+unsigned long lastAnimStepTime = 0;
+const unsigned long ANIM_STEP_INTERVAL_MS = 30;
+const int ANIM_WINDOW = 5;
+
+void startAnimation() {
+    animationPlaying = true;
+    animationStep = 0;
+    lastAnimStepTime = 0; // force first frame immediately in loop()
+
+    // Reset MIDI display state - existing session state is invalidated
+    // by a fresh connection.
+    currentLed = -1;
+    nextPreviewLed = -1;
+
+    FastLED.clear();
+    FastLED.show();
+}
+
+void updateAnimation() {
+    if (!animationPlaying) return;
+
+    unsigned long now = millis();
+    if (now - lastAnimStepTime < ANIM_STEP_INTERVAL_MS) return;
+    lastAnimStepTime = now;
+
+    // Last position where a full 5-LED window still fits on the strip.
+    const int maxStart = NUM_LEDS - ANIM_WINDOW;
+
+    if (animationStep > maxStart) {
+        // Animation finished: clear everything and hand off to normal mode.
+        FastLED.clear();
+        FastLED.show();
+        animationPlaying = false;
+        return;
+    }
+
+    FastLED.clear();
+    for (int i = 0; i < ANIM_WINDOW; i++) {
+        leds[animationStep + i] = CRGB::White;
+    }
+    FastLED.show();
+
+    animationStep++;
+}
+
+// ============================================================
+// MIDI characteristic callbacks
+// ============================================================
 class MidiCallbacks : public NimBLECharacteristicCallbacks {
 
     void onWrite(NimBLECharacteristic* characteristic,
                  NimBLEConnInfo& connInfo) override {
 
+        // Ignore MIDI packets until the one-time startup animation completes.
+        if (animationPlaying)
+            return;
+
         std::string value = characteristic->getValue();
 
-        if (value.length() != 1)
+        // ---------------- Existing single-note protocol (UNCHANGED) ----------------
+        if (value.length() == 1) {
+            uint8_t midi = (uint8_t)value[0];
+
+            int ledIndex = midi - 36;
+
+            if (ledIndex < 0 || ledIndex >= NUM_LEDS)
+                return;
+
+            if (currentLed >= 0)
+                leds[currentLed] = CRGB::Black;
+
+            // A previous Guided Practice preview LED must not linger when
+            // the app falls back to single-note mode.
+            if (nextPreviewLed >= 0) {
+                leds[nextPreviewLed] = CRGB::Black;
+                nextPreviewLed = -1;
+            }
+
+            currentLed = ledIndex;
+
+            leds[currentLed] = getNoteColor(midi);
+
+            FastLED.show();
             return;
+        }
 
-        uint8_t midi = (uint8_t)value[0];
+        // ---------------- New: Guided Practice two-note protocol ----------------
+        if (value.length() == 2) {
+            uint8_t midiCurrent = (uint8_t)value[0];
+            uint8_t midiNext    = (uint8_t)value[1];
 
-        int ledIndex = midi - 36;
+            int currentIndex = midiCurrent - 36;
+            int nextIndex    = midiNext - 36;
 
-        if (ledIndex < 0 || ledIndex >= NUM_LEDS)
+            // Clear whatever was previously lit - only two LEDs may be
+            // active at once in Guided Practice mode.
+            if (currentLed >= 0)
+                leds[currentLed] = CRGB::Black;
+            if (nextPreviewLed >= 0)
+                leds[nextPreviewLed] = CRGB::Black;
+
+            currentLed = -1;
+            nextPreviewLed = -1;
+
+            if (currentIndex >= 0 && currentIndex < NUM_LEDS) {
+                currentLed = currentIndex;
+                leds[currentLed] = getNoteColor(midiCurrent); // 100% brightness
+            }
+
+            if (nextIndex >= 0 && nextIndex < NUM_LEDS) {
+                nextPreviewLed = nextIndex;
+                CRGB previewColor = getNoteColor(midiNext);
+                previewColor.nscale8_video(128); // ~50% brightness, in place
+                leds[nextPreviewLed] = previewColor;
+            }
+
+            FastLED.show();
             return;
+        }
 
-        if (currentLed >= 0)
-            leds[currentLed] = CRGB::Black;
+        // ---------------- Invalid packet length ----------------
+        // Ignore anything that isn't exactly 1 or 2 bytes.
+    }
+};
 
-        currentLed = ledIndex;
+// ============================================================
+// Server callbacks - only used to trigger the startup animation.
+// Advertising / service / characteristic setup is untouched.
+// ============================================================
+class ServerCallbacks : public NimBLEServerCallbacks {
 
-        leds[currentLed] = CRGB::Blue;
+    void onConnect(NimBLEServer* server, NimBLEConnInfo& connInfo) override {
+        startAnimation();
+    }
 
+    void onDisconnect(NimBLEServer* server, NimBLEConnInfo& connInfo, int reason) override {
+        animationPlaying = false;
+        currentLed = -1;
+        nextPreviewLed = -1;
+        FastLED.clear();
         FastLED.show();
+        // Advertising restart behaviour is intentionally left untouched.
     }
 };
 
@@ -49,26 +194,28 @@ void setup() {
     NimBLEDevice::init("PianoBuddy");
 
     NimBLEServer* server = NimBLEDevice::createServer();
+    server->setCallbacks(new ServerCallbacks());
 
     NimBLEService* service =
-        server->createService(SERVICE_UUID);
+            server->createService(SERVICE_UUID);
 
     NimBLECharacteristic* characteristic =
-        service->createCharacteristic(
-            CHARACTERISTIC_UUID,
-            NIMBLE_PROPERTY::WRITE
-        );
+            service->createCharacteristic(
+                    CHARACTERISTIC_UUID,
+                    NIMBLE_PROPERTY::WRITE
+            );
 
     characteristic->setCallbacks(new MidiCallbacks());
 
     service->start();
 
     NimBLEAdvertising* advertising =
-        NimBLEDevice::getAdvertising();
+            NimBLEDevice::getAdvertising();
 
     advertising->addServiceUUID(SERVICE_UUID);
     advertising->start();
 }
 
 void loop() {
+    updateAnimation();
 }
