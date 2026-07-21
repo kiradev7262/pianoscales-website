@@ -23,7 +23,7 @@
   </div>
   <div class="nav-links">
     <a href="#features">Features</a>
-    <a href="#coming-soon">Coming Soon</a>
+    <a href="songs.html">Songs</a>
     <a href="https://play.google.com/store/apps/details?id=com.pianoscales.learnmusic&hl=en_IN" class="btn-primary" style="padding:10px 22px;font-size:.83rem;">Join PianoScales</a>
   </div>
 </nav>
@@ -45,7 +45,7 @@
 
     <div class="hero-btns">
       <a href="#features" class="btn-primary">Explore Features</a>
-      <a href="#coming-soon" class="btn-secondary">Coming Soon ↓</a>
+      <a href="songs.html" class="btn-secondary">Learn Songs ↓</a>
     </div>
   </div>
 
@@ -135,7 +135,24 @@
       </div>
     </div>
 
-    <div class="feature-row rev reveal">
+    <div class="feature-row rev reveal" id="songs">
+      <div class="feature-img">
+        <img src="assets/songs_screen.webp" alt="Interactive Song Learning">
+      </div>
+      <div class="feature-text">
+        <span class="feature-tag">Learn Your Favorites</span>
+        <h3>Interactive Song Learning</h3>
+        <p>Master your favorite songs with step-by-step guidance. PianoScales transforms song learning into an engaging journey—the app waits for you to play the correct note before moving forward, providing instant feedback every step of the way.</p>
+        <ul class="feature-list">
+          <li>Interactive note-by-note guidance</li>
+          <li>Real-time feedback & correction</li>
+          <li>Supports External MIDI Keyboards</li>
+          <li>Works with Virtual Piano</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="feature-row reveal">
       <div class="feature-img">
         <img src="assets/concept_screen.jpg" alt="Music Theory Screen">
       </div>
@@ -146,7 +163,7 @@
       </div>
     </div>
 
-    <div class="feature-row reveal">
+    <div class="feature-row rev reveal">
       <div class="feature-img">
         <img src="assets/practice_screen.jpg" alt="Guided Practice Screen">
       </div>
@@ -163,7 +180,7 @@
       </div>
     </div>
 
-    <div class="feature-row rev reveal">
+    <div class="feature-row reveal">
       <div class="feature-img">
         <img src="assets/freestyle_piano_vertical.jpg" alt="Freestyle Piano">
       </div>
@@ -174,7 +191,7 @@
       </div>
     </div>
 
-    <div class="feature-row reveal">
+    <div class="feature-row rev reveal">
       <div class="feature-img freestyle_piano_horizontal">
         <img src="assets/freestyle_piano_horizontal.png" alt="Landscape Piano Mode">
       </div>
@@ -185,7 +202,7 @@
       </div>
     </div>
 
-    <div class="feature-row rev reveal">
+    <div class="feature-row reveal">
       <div class="feature-img">
         <img src="assets/advance_vocal_improvment_screen.jpg" alt="Ear Training and Vocal Tutor">
       </div>
@@ -196,7 +213,7 @@
       </div>
     </div>
 
-    <div class="feature-row reveal">
+    <div class="feature-row rev reveal">
       <div class="feature-img">
         <img src="assets/me_tab.jpg" alt="Personal Learning Companion">
       </div>
@@ -207,7 +224,7 @@
       </div>
     </div>
 
-    <div class="feature-row rev reveal">
+    <div class="feature-row reveal">
       <div class="feature-img">
         <img src="assets/me_tab_showing_more_items.jpg" alt="Progress and Settings Screen">
       </div>
@@ -234,25 +251,28 @@
     <div class="diff-card"><span class="diff-icon">👂</span><span class="diff-label">Ear Training</span></div>
     <div class="diff-card"><span class="diff-icon">🎤</span><span class="diff-label">Vocal Pitch Training</span></div>
     <div class="diff-card"><span class="diff-icon">📚</span><span class="diff-label">Beginner Guidance</span></div>
-    <div class="diff-card"><span class="diff-icon">▶️</span><span class="diff-label">Visual Lessons</span></div>
+    <div class="diff-card"><span class="diff-icon">🎵</span><span class="diff-label">Interactive Songs</span></div>
     <div class="diff-card"><span class="diff-icon">📶</span><span class="diff-label">Offline First</span></div>
     <div class="diff-card"><span class="diff-icon">🚫</span><span class="diff-label">No Login Required</span></div>
   </div>
 </section>
 
 
-<!-- ======== COMING SOON ======== -->
-<section id="coming-soon" class="coming-wrap">
-  <span class="eyebrow">Version 2</span>
-  <h2>Songs Coming in V2</h2>
-  <p class="coming-sub">PianoScales V2 introduces interactive song learning — play along to fan favourites, note by note.</p>
+<!-- ======== SONG LIBRARY ======== -->
+<section id="song-library" class="coming-wrap">
+  <span class="eyebrow">Interactive Library</span>
+  <h2>Play Your Favorite Songs</h2>
+  <p class="coming-sub">Explore our growing collection of beginner-friendly songs and start playing note-by-note today.</p>
   <div class="songs-grid">
-    <div class="song-card"><span class="song-icon">🎵</span> Happy Birthday</div>
-    <div class="song-card"><span class="song-icon">⭐</span> Twinkle Twinkle Little Star</div>
-    <div class="song-card"><span class="song-icon">🎶</span> Mary Had a Little Lamb</div>
-    <div class="song-card"><span class="song-icon">🎼</span> Ode To Joy</div>
-    <div class="song-card"><span class="song-icon">🎄</span> Jingle Bells</div>
-    <div class="song-card"><span class="song-icon">🚣</span> Row Row Row Your Boat</div>
+    <a href="song.html?id=happy_birthday" class="song-card"><span class="song-icon">🎵</span> Happy Birthday</a>
+    <a href="song.html?id=twinkle_twinkle" class="song-card"><span class="song-icon">⭐</span> Twinkle Twinkle Little Star</a>
+    <a href="song.html?id=ode_to_joy" class="song-card"><span class="song-icon">🎼</span> Ode To Joy</a>
+    <a href="song.html?id=jingle_bells" class="song-card"><span class="song-icon">🎄</span> Jingle Bells</a>
+    <a href="song.html?id=fur_elise_intro" class="song-card"><span class="song-icon">🎶</span> Fur Elise (Intro)</a>
+    <a href="song.html?id=hedwigs_theme" class="song-card"><span class="song-icon">🪄</span> Hedwig's Theme</a>
+  </div>
+  <div style="margin-top: 48px;">
+    <a href="songs.html" class="btn-secondary">Browse All Songs →</a>
   </div>
 </section>
 
@@ -334,56 +354,6 @@
 </footer>
 
 
-<script>
-  /* ─── Piano key SVG divider ─── */
-  (function () {
-    const host = document.getElementById('pianoKeys');
-    if (!host) return;
-
-    const W      = Math.max(window.innerWidth, 320);
-    const WH     = 64;   // white key height
-    const WW     = 32;   // white key width
-    const BH     = 40;   // black key height
-    const BW     = 20;   // black key width
-    const count  = Math.ceil(W / WW) + 4;
-    // Black key positions within each 7-key octave (after which white key index)
-    const bPos   = [0, 1, 3, 4, 5];
-
-    let svg = `<svg viewBox="0 0 ${count * WW} ${WH}" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">`;
-
-    // White keys
-    for (let i = 0; i < count; i++) {
-      svg += `<rect x="${i * WW + 1}" y="0" width="${WW - 2}" height="${WH}"
-        rx="3" fill="rgba(240,236,255,0.045)" stroke="rgba(139,92,246,0.2)" stroke-width="1"/>`;
-    }
-    // Black keys
-    const octaves = Math.ceil(count / 7) + 1;
-    for (let o = 0; o < octaves; o++) {
-      for (const b of bPos) {
-        const wi = o * 7 + b;
-        if (wi >= count - 1) continue;
-        const bx = (wi + 1) * WW - BW / 2;
-        svg += `<rect x="${bx}" y="0" width="${BW}" height="${BH}"
-          rx="2" fill="rgba(100,60,220,0.32)" stroke="rgba(139,92,246,0.4)" stroke-width="1"/>`;
-      }
-    }
-    svg += '</svg>';
-    host.innerHTML = svg;
-  })();
-
-  /* ─── Scroll reveal ─── */
-  (function () {
-    const els = document.querySelectorAll('.reveal');
-    if (!els.length) return;
-    const io = new IntersectionObserver(
-      entries => entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
-      }),
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-    );
-    els.forEach(el => io.observe(el));
-  })();
-</script>
-
+<script src="js/common.js"></script>
 </body>
 </html>

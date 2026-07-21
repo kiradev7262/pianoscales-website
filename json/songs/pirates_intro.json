@@ -1,0 +1,35 @@
+{
+    "songId": "pirates_intro",
+    "title": "Pirates of the Caribbean",
+    "description": "Play the adventurous intro.",
+    "difficulty": "Advanced",
+    "available": true,
+    "builtIn": false,
+    "version": 1,
+    "lines": [
+        [
+            "A4",
+            "C5",
+            "D5",
+            "D5"
+        ],
+        [
+            "D5",
+            "E5",
+            "F5",
+            "F5"
+        ],
+        [
+            "F5",
+            "G5",
+            "E5",
+            "E5"
+        ],
+        [
+            "D5",
+            "C5",
+            "C5",
+            "D5"
+        ]
+    ]
+}
