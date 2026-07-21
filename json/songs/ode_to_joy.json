@@ -1,0 +1,49 @@
+{
+    "songId": "ode_to_joy",
+    "title": "Ode to Joy",
+    "description": "Play Beethoven's famous melody.",
+    "difficulty": "Intermediate",
+    "available": true,
+    "builtIn": false,
+    "version": 1,
+    "lines": [
+        [
+            "E4",
+            "E4",
+            "F4",
+            "G4",
+            "G4",
+            "F4",
+            "E4",
+            "D4"
+        ],
+        [
+            "C4",
+            "C4",
+            "D4",
+            "E4",
+            "E4",
+            "D4",
+            "D4"
+        ],
+        [
+            "E4",
+            "E4",
+            "F4",
+            "G4",
+            "G4",
+            "F4",
+            "E4",
+            "D4"
+        ],
+        [
+            "C4",
+            "C4",
+            "D4",
+            "E4",
+            "D4",
+            "C4",
+            "C4"
+        ]
+    ]
+}

@@ -1,0 +1,46 @@
+{
+    "songId": "jingle_bells",
+    "title": "Jingle Bells",
+    "description": "A festive favorite.",
+    "difficulty": "Intermediate",
+    "available": true,
+    "builtIn": false,
+    "version": 1,
+    "lines": [
+        [
+            "E4",
+            "E4",
+            "E4"
+        ],
+        [
+            "E4",
+            "E4",
+            "E4"
+        ],
+        [
+            "E4",
+            "G4",
+            "C4",
+            "D4",
+            "E4"
+        ],
+        [
+            "F4",
+            "F4",
+            "F4",
+            "F4",
+            "F4",
+            "E4",
+            "E4",
+            "E4"
+        ],
+        [
+            "E4",
+            "D4",
+            "D4",
+            "E4",
+            "D4",
+            "G4"
+        ]
+    ]
+}
